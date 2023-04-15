@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+  </head>
+  <body>
+    <h1>PixelarMidjourney</h1>
+    <input type="number" id="pixel-size" placeholder="Tamanho do pixel" min="1">
+    <input type="text" id="image-url" placeholder="URL da imagem">
+    <button id="pixelate">Pixelar</button>
+    <button id="subscribe">Assine agora</button>
+    <div class="image-container">
+      <canvas id="canvas"></canvas>
+    </div>
+    <a href="#" id="download" style="display:none;"><button>Baixar imagem</button></a>
+    <script src="popup.js"></script>
+    <script async src="https://apis.google.com/js/api.js"></script>
+    <script>
+      function onGooglePayLoaded() {
+        google.payments.api.setLoadIsReadyToPayCallback(function(result) {
+          if (result) {
+            const paymentsClient = new google.payments.api.PaymentsClient({
+              environment: 'TEST'
+            });
+            const price = '1.50';
+            const currencyCode = 'USD';
+
+            const paymentDataRequest = {
+              apiVersion: 2,
+              apiVersionMinor: 0,
+              allowedPaymentMethods: [
+                {
+                  type: 'CARD',
+                  parameters: {
+                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                    allowedCardNetworks: ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA']
+                  },
+                  tokenizationSpecification: {
+                    type: 'PAYMENT_GATEWAY',
+                    parameters: {
+                      gateway: 'example',
+                      gatewayMerchantId: 'exampleGatewayMerchantId'
+                    }
+                  }
+                }
+              ],
+              merchantInfo: {
+                merchantId: '12345678901234567890',
+                merchantName: 'PixelarMidjourney'
+              },
+              transactionInfo: {
+                totalPriceStatus: 'FINAL',
+                totalPriceLabel: 'Total',
+                totalPrice: price,
+                currencyCode: currencyCode
+              }
+            };
+
+            const handleBuyButtonClick = () => {
+              paymentsClient.loadPaymentData(paymentDataRequest).then(function(paymentData) {
+                // enviar os dados de pagamento para o seu servidor
+                console.log('Payment successful', paymentData);
+              }).catch(function(err) {
+                console.error('Error', err);
+              });
+            };
+
+            const buyButton = document.getElementById('buy-button');
+            buyButton.addEventListener('click', handleBuyButtonClick);
+          }
+        });
+      }
+
+      google.payments.api.setOnGooglePaymentsLoaded(onGooglePayLoaded);
+   

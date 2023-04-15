@@ -1,0 +1,31 @@
+{
+  "name": "PixelarMidjourney",
+  "version": "2.0",
+  "description": "Transforme imagens em arte pixelada.",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "storage",
+    "identity",
+    "https://pay.google.com/",
+    "https://apis.google.com/"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' https://pay.google.com https://apis.google.com;",
+    "sandbox": "sandbox allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation"
+  }
+}
